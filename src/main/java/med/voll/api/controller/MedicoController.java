@@ -1,44 +1,50 @@
 package med.voll.api.controller;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.api.medico.*;
+import med.voll.api.DTO.DadosAtualizacaoMedico;
+import med.voll.api.DTO.DadosCadastroMedico;
+import med.voll.api.DTO.DadosListaMedicos;
+import med.voll.api.domain.Medico;
+import med.voll.api.service.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("medicos")
 public class MedicoController {
 
+    private final MedicoService medicoService;
+
     @Autowired
-    private MedicoRepository repository;
-
-    @PostMapping
-    @Transactional
-    public void cadastrar(@RequestBody @Valid DadosCadastroMedico dados){
-
-        repository.save(new Medico(dados));
+    public MedicoController(MedicoService medicoService) {
+        this.medicoService = medicoService;
     }
 
-    @GetMapping
-    public Page<DadosListaMedicos> listar(Pageable pageable){
-       return repository.findAllByAtivoTrue(pageable).map(DadosListaMedicos::new);
+    @GetMapping("/listar")
+    public Page<DadosListaMedicos> findAllMedico(@PageableDefault(size = 10, sort = "nome") Pageable pageable){
+        return medicoService.findAllMedico(pageable);
     }
 
-    @PutMapping
-    @Transactional
-    public void atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados){
-        var medico = repository.getReferenceById(dados.id());
-        medico.atualizarInformacoes(dados);
+    @GetMapping("/listar/{id}")
+    public DadosListaMedicos findById(@PathVariable(name = "id") Long id){
+        return medicoService.findById(id);
     }
 
-    @DeleteMapping("/{id}")
-    @Transactional
-    public void excluir(@PathVariable Long id){
-        var medico = repository.getReferenceById(id);
-        medico.excluir();
+    @PostMapping("/cadastrar")
+    public Medico create(@RequestBody @Valid DadosCadastroMedico dados){
+        return medicoService.create(dados);
     }
 
+    @PutMapping("/atualizar")
+    public DadosAtualizacaoMedico update(@RequestBody @Valid DadosAtualizacaoMedico dados){
+        return medicoService.update(dados);
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public void delete(@PathVariable Long id){
+        medicoService.delete(id);
+    }
 }
