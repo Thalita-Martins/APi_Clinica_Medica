@@ -30,9 +30,10 @@ public class MedicoService {
         return new DadosListaMedicos(medico);
     }
 
-    public Medico create(DadosCadastroMedico dados) {
+    public DadosListaMedicos create(DadosCadastroMedico dados) {
         var medico = new Medico(dados);
-        return save(medico);
+        save(medico);
+        return new DadosListaMedicos(medico);
     }
 
     public DadosAtualizacaoMedico update(DadosAtualizacaoMedico dados){
@@ -48,7 +49,7 @@ public class MedicoService {
         save(medicoRecuperado);
     }
 
-    public Medico save(Medico medico){
-        return medicoRepository.save(medico);
+    public void save(Medico medico){
+        medicoRepository.save(medico);
     }
 }

@@ -1,46 +1,49 @@
 package med.voll.api.controller;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.DTO.DadosAtualizacaoPaciente;
 import med.voll.api.DTO.DadosCadastroPaciente;
 import med.voll.api.DTO.DadosListaPaciente;
-import med.voll.api.domain.Paciente;
-import med.voll.api.repository.PacienteRepository;
+import med.voll.api.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("pacientes")
 public class PacienteController {
 
+    private final PacienteService pacienteService;
+
     @Autowired
-    private PacienteRepository repository;
-
-    @PostMapping
-    @Transactional
-    public void cadastrar(@RequestBody @Valid DadosCadastroPaciente dados) {
-        repository.save(new Paciente(dados));
+    public PacienteController(PacienteService pacienteService) {
+        this.pacienteService = pacienteService;
     }
 
-    @GetMapping
-    public Page<DadosListaPaciente> listarPaciente(Pageable pageable) {
-        return repository.findAllByAtivoTrue(pageable).map(DadosListaPaciente::new);
+    @GetMapping("/listar")
+    public Page<DadosListaPaciente> findAllPaciente(@PageableDefault(size = 10, sort = "nome") Pageable pageable){
+        return pacienteService.findAllPaciente(pageable);
     }
 
-    @PutMapping
-    @Transactional
-    public void atualizar(@RequestBody @Valid DadosAtualizacaoPaciente dados) {
-        var paciente = repository.getReferenceById(dados.id());
-        paciente.atualizarInformacoes(dados);
+    @GetMapping("/listar/{id}")
+    public DadosListaPaciente findByPacienteId(@PathVariable(name = "id") Long id){
+        return pacienteService.findByPacienteId(id);
     }
 
-    @DeleteMapping("/{id}")
-    @Transactional
-    public void excluir(@PathVariable long id) {
-        var paciente = repository.getReferenceById(id);
-        paciente.excluir();
+    @PostMapping("/cadastrar")
+    public DadosListaPaciente create(@RequestBody @Valid DadosCadastroPaciente dados) {
+        return pacienteService.create(dados);
+    }
+
+    @PutMapping("/atualizar")
+    public DadosAtualizacaoPaciente update(@RequestBody @Valid DadosAtualizacaoPaciente dados) {
+       return pacienteService.update(dados);
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public void delete(@PathVariable Long id){
+        pacienteService.delete(id);
     }
 }

@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import med.voll.api.DTO.DadosAtualizacaoMedico;
 import med.voll.api.DTO.DadosCadastroMedico;
 import med.voll.api.DTO.DadosListaMedicos;
-import med.voll.api.domain.Medico;
 import med.voll.api.service.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,7 @@ public class MedicoController {
     }
 
     @PostMapping("/cadastrar")
-    public Medico create(@RequestBody @Valid DadosCadastroMedico dados){
+    public DadosListaMedicos create(@RequestBody @Valid DadosCadastroMedico dados){
         return medicoService.create(dados);
     }
 
