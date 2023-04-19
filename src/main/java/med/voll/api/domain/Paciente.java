@@ -2,7 +2,7 @@ package med.voll.api.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import med.voll.api.endereco.Endereco;
+import med.voll.api.dadosCompartilhados.Endereco;
 import med.voll.api.DTO.DadosAtualizacaoPaciente;
 import med.voll.api.DTO.DadosCadastroPaciente;
 
@@ -17,7 +17,6 @@ public class Paciente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String nome;
     private String email;
     private String telefone;
@@ -32,7 +31,7 @@ public class Paciente {
         this.email = dados.email();
         this.cpf = dados.cpf();
         this.telefone = dados.telefone();
-        this.endereco = new Endereco(dados.endereco());
+        this.endereco = dados.endereco();
     }
 
     public void mergeUpdate(DadosAtualizacaoPaciente dados){
@@ -40,9 +39,5 @@ public class Paciente {
         this.cpf = dados.cpf();
         this.telefone = dados.telefone();
         this.endereco =  dados.endereco();
-    }
-
-    public void excluir() {
-        this.ativo = false;
     }
 }

@@ -1,7 +1,7 @@
 package med.voll.api.DTO;
 
+import med.voll.api.domain.Especialidade;
 import med.voll.api.domain.Medico;
-import med.voll.api.enumTipos.Especialidade;
 
 public record DadosListaMedicos(
 

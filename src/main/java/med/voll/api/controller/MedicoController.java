@@ -1,6 +1,5 @@
 package med.voll.api.controller;
 
-import jakarta.validation.Valid;
 import med.voll.api.DTO.DadosAtualizacaoMedico;
 import med.voll.api.DTO.DadosCadastroMedico;
 import med.voll.api.DTO.DadosListaMedicos;
@@ -33,12 +32,12 @@ public class MedicoController {
     }
 
     @PostMapping("/cadastrar")
-    public DadosListaMedicos create(@RequestBody @Valid DadosCadastroMedico dados){
+    public DadosListaMedicos create(@RequestBody DadosCadastroMedico dados){
         return medicoService.create(dados);
     }
 
     @PutMapping("/atualizar")
-    public DadosAtualizacaoMedico update(@RequestBody @Valid DadosAtualizacaoMedico dados){
+    public DadosAtualizacaoMedico update(@RequestBody DadosAtualizacaoMedico dados){
         return medicoService.update(dados);
     }
 

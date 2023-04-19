@@ -2,10 +2,9 @@ package med.voll.api.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import med.voll.api.endereco.Endereco;
+import med.voll.api.dadosCompartilhados.Endereco;
 import med.voll.api.DTO.DadosAtualizacaoMedico;
 import med.voll.api.DTO.DadosCadastroMedico;
-import med.voll.api.enumTipos.Especialidade;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,21 +18,22 @@ public class Medico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    private String cpf;
     private String email;
     private String telefone;
     private String crm;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "espcialidade_id")
     private Especialidade especialidade;
-
     @Embedded
     private Endereco endereco;
-
     private Boolean ativo;
 
     public Medico(DadosCadastroMedico dados){
         this.ativo = true;
         this.nome = dados.nome();
+        this.cpf = dados.cpf();
         this.email = dados.email();
         this.telefone = dados.telefone();
         this.crm = dados.crm();
@@ -43,12 +43,9 @@ public class Medico {
 
     public void mergeUpdate(DadosAtualizacaoMedico dados){
         this.nome = dados.nome();
+        this.cpf = dados.cpf();
         this.telefone = dados.telefone();
         this.endereco = dados.endereco();
         this.especialidade = dados.especialidade();
-    }
-
-    public void excluir() {
-        this.ativo = false;
     }
 }

@@ -1,20 +1,20 @@
 package med.voll.api.DTO;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import med.voll.api.domain.Especialidade;
 import med.voll.api.domain.Medico;
-import med.voll.api.endereco.Endereco;
-import med.voll.api.enumTipos.Especialidade;
+import med.voll.api.dadosCompartilhados.Endereco;
 
 public record DadosAtualizacaoMedico(
-
         @NotNull
         Long id,
         String nome,
+        String cpf,
         String telefone,
         Especialidade especialidade,
-        @Valid Endereco endereco) {
+        Endereco endereco) {
+
         public DadosAtualizacaoMedico(Medico medico) {
-                this(medico.getId(), medico.getNome(), medico.getTelefone(),medico.getEspecialidade(),medico.getEndereco());
+                this(medico.getId(), medico.getNome(), medico.getCpf(), medico.getTelefone(),medico.getEspecialidade(),medico.getEndereco());
         }
 }

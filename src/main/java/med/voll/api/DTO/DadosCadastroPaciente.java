@@ -1,11 +1,8 @@
 package med.voll.api.DTO;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import med.voll.api.endereco.DadosEndereco;
+import med.voll.api.dadosCompartilhados.Endereco;
 
 public record DadosCadastroPaciente(
 
@@ -20,11 +17,8 @@ public record DadosCadastroPaciente(
         String telefone,
 
         @NotBlank
-        @Pattern(regexp = "\\d{3}\\.?\\d{3}\\.?\\d{3}\\-?\\d{2}")
         String cpf,
 
-        @NotNull
-        @Valid
-        DadosEndereco endereco
+        Endereco endereco
 ) {
 }
