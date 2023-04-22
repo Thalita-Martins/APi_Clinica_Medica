@@ -9,9 +9,10 @@ public record DadosListaMedicos(
         String nome,
         String email,
         String crm,
+        Boolean ativo,
         Especialidade especialidade) {
 
     public DadosListaMedicos(Medico medico){
-        this(medico.getId(),medico.getNome(), medico.getEmail(), medico.getCrm(), medico.getEspecialidade());
+        this(medico.getId(),medico.getNome(), medico.getEmail(), medico.getCrm(), medico.getAtivo(), medico.getEspecialidade());
     }
 }

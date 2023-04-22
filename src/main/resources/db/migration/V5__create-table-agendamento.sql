@@ -12,5 +12,4 @@ REFERENCES medico(id),
 CONSTRAINT fk_agendamento_paciente
 FOREIGN KEY (paciente_id)
 REFERENCES paciente(id)
-
 );

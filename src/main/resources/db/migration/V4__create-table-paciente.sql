@@ -10,6 +10,6 @@ create table paciente(
     complemento varchar(100),
     numero varchar(20),
     uf char(2) NOT NULL,
-    cidade varchar(100) NOT NULL
-
+    cidade varchar(100) NOT NULL,
+    ativo boolean
 );

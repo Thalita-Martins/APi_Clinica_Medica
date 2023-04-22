@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PacienteService {
@@ -22,21 +24,25 @@ public class PacienteService {
         this.pacienteRepository = pacienteRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<DadosListaPaciente> findAllPaciente(Pageable pageable) {
        return pacienteRepository.findAllByAtivoTrue(pageable);
     }
 
+    @Transactional(readOnly = true)
     public DadosListaPaciente findByPacienteId(Long id) {
         var pacienteRecuperado = pacienteRepository.findById(id).orElseThrow(() -> new RegraNegocioException("Paciente não encontrado"));
         return new DadosListaPaciente(pacienteRecuperado);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public DadosListaPaciente create(DadosCadastroPaciente dados) {
         var paciente = new Paciente(dados);
         save(paciente);
         return new DadosListaPaciente(paciente);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public DadosAtualizacaoPaciente update(DadosAtualizacaoPaciente dados) {
         var pacienteRecuperado = pacienteRepository.findById(dados.id()).orElseThrow(() -> new RegraNegocioException("Paciente não encontrado"));
         pacienteRecuperado.mergeUpdate(dados);
@@ -44,13 +50,16 @@ public class PacienteService {
         return new DadosAtualizacaoPaciente(pacienteRecuperado);
     }
 
-    public void save(Paciente paciente){
-        pacienteRepository.save(paciente);
-    }
-
-    public void delete(Long id) {
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Boolean delete(Long id) {
         var pacienteRecuperado = pacienteRepository.findById(id).orElseThrow(() -> new RegraNegocioException("Paciente não encontrado"));
         pacienteRecuperado.setAtivo(false);
         save(pacienteRecuperado);
+        return true;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void save(Paciente paciente){
+        pacienteRepository.save(paciente);
     }
 }

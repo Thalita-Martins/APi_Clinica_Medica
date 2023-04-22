@@ -3,15 +3,17 @@ package med.voll.api.controller;
 import med.voll.api.DTO.DadosAtualizacaoMedico;
 import med.voll.api.DTO.DadosCadastroMedico;
 import med.voll.api.DTO.DadosListaMedicos;
+import med.voll.api.exception.RegraNegocioException;
 import med.voll.api.service.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("medicos")
+@RequestMapping("medico")
 public class MedicoController {
 
     private final MedicoService medicoService;
@@ -26,9 +28,14 @@ public class MedicoController {
         return medicoService.findAllMedico(pageable);
     }
 
-    @GetMapping("/listar/{id}")
-    public DadosListaMedicos findById(@PathVariable(name = "id") Long id){
-        return medicoService.findById(id);
+    @GetMapping("/listar/{medicoId}")
+    public ResponseEntity findByMedicoId(@PathVariable(name = "medicoId") Long medicoId) {
+        try {
+            var medico = medicoService.findByMedicoId(medicoId);
+            return ResponseEntity.ok(medico);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/cadastrar")
@@ -37,12 +44,22 @@ public class MedicoController {
     }
 
     @PutMapping("/atualizar")
-    public DadosAtualizacaoMedico update(@RequestBody DadosAtualizacaoMedico dados){
-        return medicoService.update(dados);
+    public ResponseEntity update(@RequestBody DadosAtualizacaoMedico dados){
+        try{
+            var medico = medicoService.update(dados);
+            return ResponseEntity.ok(medico);
+        }catch (RegraNegocioException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @DeleteMapping("/deletar/{id}")
-    public void delete(@PathVariable Long id){
-        medicoService.delete(id);
+    @DeleteMapping("/deletar/{medicoId}")
+    public ResponseEntity delete(@PathVariable Long medicoId){
+        try{
+            var status = medicoService.delete(medicoId);
+            return ResponseEntity.ok(status);
+        }catch (RegraNegocioException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

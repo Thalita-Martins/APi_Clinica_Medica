@@ -10,8 +10,8 @@ import med.voll.api.DTO.DadosCadastroMedico;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "id")
-@Table(name = "medicos")
-@Entity(name = "Medico")
+@Entity
+@Table(name = "medico")
 public class Medico {
 
     @Id
@@ -24,7 +24,7 @@ public class Medico {
     private String crm;
 
     @ManyToOne
-    @JoinColumn(name = "espcialidade_id")
+    @JoinColumn(name = "especialidade_id")
     private Especialidade especialidade;
     @Embedded
     private Endereco endereco;

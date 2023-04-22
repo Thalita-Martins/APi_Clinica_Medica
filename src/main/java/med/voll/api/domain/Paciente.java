@@ -10,8 +10,8 @@ import med.voll.api.DTO.DadosCadastroPaciente;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "id")
-@Table(name = "pacientes")
-@Entity(name = "Paciente")
+@Entity
+@Table(name = "paciente")
 public class Paciente {
 
     @Id
