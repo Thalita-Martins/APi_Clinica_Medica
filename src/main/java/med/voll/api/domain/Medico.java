@@ -6,16 +6,26 @@ import med.voll.api.dadosCompartilhados.Endereco;
 import med.voll.api.DTO.DadosAtualizacaoMedico;
 import med.voll.api.DTO.DadosCadastroMedico;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "medico")
-public class Medico {
+public class Medico implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private static final String SEQ_GENERATOR = "medico_id_seq_gen";
+    private static final String SEQ_NAME = "medico_id_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_GENERATOR)
+    @SequenceGenerator(name = SEQ_GENERATOR, sequenceName = SEQ_NAME, allocationSize = 1)
     private Long id;
     private String nome;
     private String cpf;

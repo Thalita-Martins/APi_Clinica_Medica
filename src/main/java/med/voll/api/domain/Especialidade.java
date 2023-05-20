@@ -1,57 +1,28 @@
 package med.voll.api.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "especialidade")
 public class Especialidade {
 
+    private static final String SEQ_GENERATOR = "especialidade_id_seq_gen";
+    private static final String SEQ_NAME = "especialidade_id_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_GENERATOR)
+    @SequenceGenerator(name = SEQ_GENERATOR, sequenceName = SEQ_NAME, allocationSize = 1)
     private Long id;
 
     @Column(name = "descricao")
     private String descricao;
-
-    public Especialidade() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Especialidade that = (Especialidade) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Especialidade{" +
-                "id=" + id +
-                ", descricao='" + descricao + '\'' +
-                '}';
-    }
 }

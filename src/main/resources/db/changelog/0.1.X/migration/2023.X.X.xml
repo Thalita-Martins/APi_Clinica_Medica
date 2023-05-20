@@ -1,0 +1,89 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="20230520194300" author="Thalita">
+        <createSequence sequenceName="especialidade_id_seq"/>
+
+        <createTable tableName="especialidade">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="especialidade_id_seq"/>
+            <column name="descricao" type="varchar(200)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="especialidade" columnNames="id" constraintName="especialidade_id_PK"/>
+
+        <loadData tableName="especialidade" file="/db/changelog/0.1.X/migration/especialidade.csv"
+                  table="especialidade"
+                  separator=","/>
+    </changeSet>
+
+    <changeSet id="20230520194400" author="Thalita">
+        <createSequence sequenceName="paciente_id_seq"/>
+        <createSequence sequenceName="medico_id_seq"/>
+        <createSequence sequenceName="agendamento_id_seq"/>
+
+        <createTable tableName="paciente">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="paciente_id_seq"/>
+            <column name="nome" type="varchar(200)"/>
+            <column name="cpf" type="varchar(11)"/>
+            <column name="telefone" type="varchar(200)"/>
+            <column name="email" type="varchar(200)"/>
+            <column name="ativo" type="boolean"/>
+            <column name="logradouro" type="varchar(200)"/>
+            <column name="bairro" type="varchar(200)"/>
+            <column name="cep" type="varchar(200)"/>
+            <column name="numero" type="varchar(200)"/>
+            <column name="complemento" type="varchar(200)"/>
+            <column name="cidade" type="varchar(200)"/>
+            <column name="uf" type="varchar(200)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="paciente" columnNames="id" constraintName="paciente_id_PK"/>
+
+        <createTable tableName="medico">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="medico_id_seq"/>
+            <column name="nome" type="varchar(200)"/>
+            <column name="cpf" type="varchar(11)"/>
+            <column name="email" type="varchar(200)"/>
+            <column name="telefone" type="varchar(200)"/>
+            <column name="crm" type="varchar(200)"/>
+            <column name="especialidade_id" type="BIGINT"/>
+            <column name="ativo" type="boolean"/>
+            <column name="logradouro" type="varchar(200)"/>
+            <column name="bairro" type="varchar(200)"/>
+            <column name="cep" type="varchar(200)"/>
+            <column name="numero" type="varchar(200)"/>
+            <column name="complemento" type="varchar(200)"/>
+            <column name="cidade" type="varchar(200)"/>
+            <column name="uf" type="varchar(200)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="medico" columnNames="id" constraintName="medico_id_PK"/>
+
+        <addForeignKeyConstraint baseTableName="medico" baseColumnNames="especialidade_id"
+                                 constraintName="medico_especialidade_id_FK" referencedTableName="especialidade"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="agendamento">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="agendamento_id_seq"/>
+            <column name="data" type="date"/>
+            <column name="hora_inicial" type="time"/>
+            <column name="hora_final" type="time"/>
+            <column name="medico_id" type="BIGINT"/>
+            <column name="paciente_id" type="BIGINT"/>
+            <column name="status" type="varchar(20)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="agendamento" columnNames="id" constraintName="agendamento_id_PK"/>
+
+        <addForeignKeyConstraint baseTableName="agendamento" baseColumnNames="medico_id"
+                                 constraintName="agendamento_medico_id_FK" referencedTableName="medico"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="agendamento" baseColumnNames="paciente_id"
+                                 constraintName="agendamento_paciente_id_FK" referencedTableName="paciente"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
